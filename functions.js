@@ -16,24 +16,23 @@ export async function okxWithdraw(apiKey, secret, pass, token, amount, address, 
           'enableRateLimit': true
         })
 
-          let subAccounts = await cexAccount.privateGetUsersSubaccountList()
-          let accs = []
-          for(let acc of subAccounts.data){
-              accs.push(acc.subAcct)
-          }
-
-          for(let acc of accs){
-            let subBalances = await cexAccount.privateGetAssetSubaccountBalances({subAcct: acc, currency: token})
-            if(subBalances.data.length > 0){
-                for(let balances of subBalances.data){
-                    if(balances.ccy == token){
-                        // nonZeroAccs.push({
-                        //     name: acc,
-                        //     balances: balances.availBal
-                        // })
-                        await cexAccount.transfer(token, balances.availBal, 'funding', 'funding', {
-                            type: '2',
-                            subAcct: acc
+        let subAccounts = await cexAccount.privateGetUsersSubaccountList()
+        let accs = []
+        for(let acc of subAccounts.data){
+            accs.push(acc.subAcct)
+        }
+        for(let acc of accs){
+          let subBalances = await cexAccount.privateGetAssetSubaccountBalances({subAcct: acc, currency: token})
+          if(subBalances.data.length > 0){
+              for(let balances of subBalances.data){
+                  if(balances.ccy == token){
+                      // nonZeroAccs.push({
+                      //     name: acc,
+                      //     balances: balances.availBal
+                      // })
+                      await cexAccount.transfer(token, balances.availBal, 'funding', 'funding', {
+                          type: '2',
+                          subAcct: acc
                         })
                     }
                 }
@@ -42,13 +41,14 @@ export async function okxWithdraw(apiKey, secret, pass, token, amount, address, 
 
       
       const chainName = await cexAccount.fetchCurrencies()
+      let y = chainName[token].networks[networkName].id
       const withdraw = await cexAccount.withdraw(
           token,
           amount,
           address,
           {
               toAddress: address,
-              chainName: chainName[token].networks[networkName].id,
+              chain: chainName[token].networks[networkName].id,
               dest: 4,
               fee: chainName[token].networks[networkName].fee,
               pwd: '-',
