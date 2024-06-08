@@ -32,7 +32,7 @@ export async function getNetworkNameOKX(networkName){
   switch(networkName){
     case "arbitrum" : return network = "Arbitrum One"
     case "base" : return network = "Base"
-    case "ethereum" : return network = "ERC20"
+    case "ethereum" : return network = "ETH"
     case "linea" : return network = "Linea"
     case "optimism" : return network = "Optimism"
     case "zkSync" : return network = "zkSync Era"
