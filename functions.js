@@ -90,15 +90,19 @@ export async function okxWithdraw(apiKey, secret, pass, token, amount, address, 
 
 
 export async function binanceWithdraw(apiKey, secret, amount, token, network, address) {
-    const accountBinance = new ccxt.binance({
-      apiKey: apiKey,                   //всталвеям
-      secret: secret,                   //вставляем
-      enableRateLimit: true,
-      //timeout: 30000,
-      options: {
-        defaultType: 'spot',
-      },
-    });
-    const chainName = await accountBinance.fetchCurrencies()
-    await accountBinance.withdraw(token, amount, address, null, { network: network });
+    try{
+        const accountBinance = new ccxt.binance({
+        apiKey: apiKey,                   //всталвеям
+        secret: secret,                   //вставляем
+        enableRateLimit: true,
+        timeout: 30000,
+        options: {
+            defaultType: 'spot',
+        },
+        });
+        const chainName = await accountBinance.fetchCurrencies()
+        await accountBinance.withdraw(token, amount, address, null, { network: network });
+    }catch(e){
+        logger.error(`Unknown problem with binanceWithdraw - ${e}`)
+    }
   };
